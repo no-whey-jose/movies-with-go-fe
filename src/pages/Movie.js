@@ -23,11 +23,9 @@ const Movie = () => {
   return (
     <Layout title={title}>
       <p>{description}</p>
-      <small>
-        <em>
-          {release_date}, {runtime} minutes. Rated {rated}
-        </em>
-      </small>
+      <p className="text-end fs-6 fst-italic">
+        {release_date}, {runtime} minutes. Rated {rated}
+      </p>
     </Layout>
   );
 };
