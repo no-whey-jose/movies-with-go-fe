@@ -1,6 +1,9 @@
+import { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 
 function App() {
+  const [jwt, setJwt] = useState("");
+
   return (
     <div className="container">
       <div className="row">
@@ -8,9 +11,15 @@ function App() {
           <h1 className="mt-3">Movies with Go!</h1>
         </div>
         <div className="col text-end">
-          <Link to="/login">
-            <span className="badge bg-success">Login</span>
-          </Link>
+          {jwt === "" ? (
+            <Link to="/login">
+              <span className="badge bg-success">Login</span>
+            </Link>
+          ) : (
+            <a href="#!">
+              <span className="badge bg-light text-dark">Logout</span>
+            </a>
+          )}
         </div>
         <hr className="md-3" />
       </div>
@@ -33,24 +42,28 @@ function App() {
               >
                 Genres
               </Link>
-              <Link
-                to="/admin/movie/0"
-                className="list-group-item list-group-item-action"
-              >
-                Add Movie
-              </Link>
-              <Link
-                to="/admin"
-                className="list-group-item list-group-item-action"
-              >
-                Manage Catalog
-              </Link>
-              <Link
-                to="/graphql"
-                className="list-group-item list-group-item-action"
-              >
-                GraphQL
-              </Link>
+              {jwt !== "" && (
+                <>
+                  <Link
+                    to="/admin/movie/0"
+                    className="list-group-item list-group-item-action"
+                  >
+                    Add Movie
+                  </Link>
+                  <Link
+                    to="/admin"
+                    className="list-group-item list-group-item-action"
+                  >
+                    Manage Catalog
+                  </Link>
+                  <Link
+                    to="/graphql"
+                    className="list-group-item list-group-item-action"
+                  >
+                    GraphQL
+                  </Link>
+                </>
+              )}
             </div>
           </nav>
         </div>

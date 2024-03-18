@@ -3,9 +3,9 @@ const Layout = ({ title, children }) => {
     <>
       <div className="text-center">
         <h2>{title}</h2>
-        <hr />
-        {children}
       </div>
+      <hr />
+      {children}
     </>
   );
 };
