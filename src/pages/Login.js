@@ -1,13 +1,32 @@
 import { useState } from "react";
 import Layout from "./Layout";
-import Input from "../components/input";
+import Input from "../components/Input";
+import { useNavigate, useOutletContext } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const { setJwt } = useOutletContext();
+  const { setAlertClassname } = useOutletContext();
+  const { setAlertMsg } = useOutletContext();
+
+  const navigate = useNavigate();
+
   const handleSubmit = (event) => {
     event.preventDefault();
+    console.log("email", email);
+    console.log("password", password);
+
+    if (email === "test@test.org") {
+      setJwt("authorized");
+      setAlertClassname("d-none");
+      setAlertMsg("");
+      navigate("/");
+    } else {
+      setAlertClassname("alert-danger");
+      setAlertMsg("Invalid Credentials");
+    }
   };
 
   return (
@@ -35,7 +54,7 @@ const Login = () => {
             }}
           />
           <hr />
-          <input type="submit " className="btn btn-primary" value="login" />
+          <input type="submit" className="btn btn-primary" value="Login" />
         </form>
       </div>
     </Layout>
