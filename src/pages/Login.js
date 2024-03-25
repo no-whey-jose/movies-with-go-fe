@@ -2,6 +2,7 @@ import { useState } from "react";
 import Layout from "./Layout";
 import Input from "../components/Input";
 import { useNavigate, useOutletContext } from "react-router-dom";
+import { Authenticate } from "../api/Authenticate";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -15,18 +16,22 @@ const Login = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log("email", email);
-    console.log("password", password);
-
-    if (email === "test@test.org") {
-      setJwt("authorized");
-      setAlertClassname("d-none");
-      setAlertMsg("");
-      navigate("/");
-    } else {
-      setAlertClassname("alert-danger");
-      setAlertMsg("Invalid Credentials");
-    }
+    Authenticate.SignIn({ email, password })
+      .then((data) => {
+        if (data.error) {
+          setAlertClassname("alert-danger");
+          setAlertMsg(data.message);
+        } else {
+          setJwt(data.access_token);
+          setAlertClassname("d-none");
+          setAlertMsg("");
+          navigate("/");
+        }
+      })
+      .catch((error) => {
+        setAlertClassname("alert-danger");
+        setAlertMsg(error);
+      });
   };
 
   return (

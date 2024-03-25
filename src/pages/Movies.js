@@ -6,27 +6,18 @@ const Movies = () => {
   const [movies, setMovies] = useState([]);
 
   useEffect(() => {
-    let moviesList = [
-      {
-        id: 1,
-        title: "The Secret Life of Walter Mitty",
-        release_date: "2013-10-05",
-        runtime: 114,
-        rated: "PG",
-        description:
-          "When both he and a colleague are about to lose their job, Walter takes action by embarking on an adventure more extraordinary than anything he ever imagined.",
-      },
-      {
-        id: 2,
-        title: "Empire Records",
-        release_date: "1995-09-22",
-        runtime: 90,
-        rated: "PG-13",
-        description:
-          "A day in the life of the employees of Empire Records. Except this is a day where everything comes to a head for a number of them facing personal crises - can they pull through together? And more importantly, can they keep their record store independent and not swallowed up by corporate greed?",
-      },
-    ];
-    setMovies(moviesList);
+    const headers = new Headers();
+    headers.append("Content-Type", "application/json");
+
+    const reqOptions = {
+      method: "GET",
+      headers,
+    };
+
+    fetch(`http://localhost:8080/movies`, reqOptions)
+      .then((res) => res.json())
+      .then((data) => setMovies(data))
+      .catch((err) => console.log(err));
   }, []);
 
   return (
