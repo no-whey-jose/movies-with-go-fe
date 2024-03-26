@@ -1,4 +1,4 @@
-const SignIn = async (payload) => {
+const ByEmailAndPassword = async (payload) => {
   const options = {
     method: "POST",
     headers: {
@@ -17,6 +17,19 @@ const SignIn = async (payload) => {
     });
 };
 
+const RefreshToken = async () => {
+  const options = {
+    method: "GET",
+    credentials: "include",
+  };
+
+  return await fetch("/refresh", options)
+    .then((res) => res.json())
+    .then((data) => data)
+    .catch((error) => error);
+};
+
 export const Authenticate = {
-  SignIn,
+  ByEmailAndPassword,
+  RefreshToken,
 };

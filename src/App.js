@@ -1,11 +1,28 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import Alert from "./components/Alert";
+import { Authenticate } from "./api/Authenticate";
 
 function App() {
   const [jwt, setJwt] = useState("");
   const [alertMsg, setAlertMsg] = useState("");
   const [alertClassname, setAlertClassname] = useState("d-none");
+
+  useEffect(() => {
+    const refreshToken = async () => {
+      return await Authenticate.RefreshToken();
+    };
+    if (jwt === "") {
+      try {
+        const data = refreshToken();
+        if (data.access_token) {
+          setJwt(data.access_token);
+        }
+      } catch (error) {
+        console.log("user is not logged in", error);
+      }
+    }
+  }, [jwt]);
 
   const navigate = useNavigate();
 

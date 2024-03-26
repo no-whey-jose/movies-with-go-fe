@@ -16,7 +16,7 @@ const Login = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    Authenticate.SignIn({ email, password })
+    Authenticate.ByEmailAndPassword({ email, password })
       .then((data) => {
         if (data.error) {
           setAlertClassname("alert-danger");
