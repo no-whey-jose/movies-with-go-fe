@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import Alert from "./components/Alert";
 import { Authenticate } from "./api/Authenticate";
@@ -7,6 +7,29 @@ function App() {
   const [jwt, setJwt] = useState("");
   const [alertMsg, setAlertMsg] = useState("");
   const [alertClassname, setAlertClassname] = useState("d-none");
+  const [tickInterval, setTickInterval] = useState();
+
+  const toggleRefresh = useCallback(
+    (status) => {
+      if (status) {
+        let i = setInterval(async () => {
+          try {
+            const data = await Authenticate.RefreshToken();
+            if (data.access_token) {
+              setJwt(data.access_token);
+            }
+          } catch (error) {
+            console.log("user is not logged in", error);
+          }
+        }, 600000);
+        setTickInterval(i);
+      } else {
+        setTickInterval(null);
+        clearInterval(tickInterval);
+      }
+    },
+    [tickInterval]
+  );
 
   useEffect(() => {
     const refreshToken = async () => {
@@ -14,6 +37,7 @@ function App() {
         const data = await Authenticate.RefreshToken();
         if (data.access_token) {
           setJwt(data.access_token);
+          toggleRefresh(true);
         }
       } catch (error) {
         console.log("user is not logged in", error);
@@ -23,14 +47,17 @@ function App() {
     if (jwt === "") {
       refreshToken();
     }
-  }, [jwt]);
+  }, [jwt, toggleRefresh]);
 
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     await Authenticate.ClearToken()
       .catch((error) => console.log("Error logging out", error))
-      .finally(setJwt(""));
+      .finally(() => {
+        setJwt("");
+        toggleRefresh(false);
+      });
     navigate("/login");
   };
   return (
@@ -98,7 +125,15 @@ function App() {
         </div>
         <div className="col-md-10">
           <Alert message={alertMsg} classname={alertClassname} />
-          <Outlet context={{ jwt, setJwt, setAlertClassname, setAlertMsg }} />
+          <Outlet
+            context={{
+              jwt,
+              setJwt,
+              setAlertClassname,
+              setAlertMsg,
+              toggleRefresh,
+            }}
+          />
         </div>
       </div>
     </div>

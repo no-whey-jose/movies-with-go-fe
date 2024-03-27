@@ -11,6 +11,7 @@ const Login = () => {
   const { setJwt } = useOutletContext();
   const { setAlertClassname } = useOutletContext();
   const { setAlertMsg } = useOutletContext();
+  const { toggleRefresh } = useOutletContext();
 
   const navigate = useNavigate();
 
@@ -25,6 +26,7 @@ const Login = () => {
           setJwt(data.access_token);
           setAlertClassname("d-none");
           setAlertMsg("");
+          toggleRefresh(true);
           navigate("/");
         }
       })
