@@ -10,24 +10,27 @@ function App() {
 
   useEffect(() => {
     const refreshToken = async () => {
-      return await Authenticate.RefreshToken();
-    };
-    if (jwt === "") {
       try {
-        const data = refreshToken();
+        const data = await Authenticate.RefreshToken();
         if (data.access_token) {
           setJwt(data.access_token);
         }
       } catch (error) {
         console.log("user is not logged in", error);
       }
+    };
+
+    if (jwt === "") {
+      refreshToken();
     }
   }, [jwt]);
 
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    setJwt("");
+  const handleLogout = async () => {
+    await Authenticate.ClearToken()
+      .catch((error) => console.log("Error logging out", error))
+      .finally(setJwt(""));
     navigate("/login");
   };
   return (

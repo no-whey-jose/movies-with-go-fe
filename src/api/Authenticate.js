@@ -17,6 +17,15 @@ const ByEmailAndPassword = async (payload) => {
     });
 };
 
+const ClearToken = async () => {
+  const options = {
+    method: "GET",
+    credentials: "include",
+  };
+
+  return fetch("/logout", options).catch((error) => error);
+};
+
 const RefreshToken = async () => {
   const options = {
     method: "GET",
@@ -31,5 +40,6 @@ const RefreshToken = async () => {
 
 export const Authenticate = {
   ByEmailAndPassword,
+  ClearToken,
   RefreshToken,
 };
